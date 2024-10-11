@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}STELLAR RUSH{% endblock %}
+{% block link %}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> 
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.80.0/dist/phaser.js"></script>
+    <style>
+        /* Stellar game layout and styling */
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000; /* Space-like background */
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #phaser-game {
+            border: 3px solid white;
+            background-color: #1a1a1a; /* Space-like background for the game canvas */
+            box-shadow: 0 0 15px #fff; /* Add some glowing effect */
+        }
+
+        #start_button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #5d00a3; /* Deep purple, gives a stellar feel */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Glowing effect */
+        }
+
+        #start_button:hover {
+            background: #7b00cc;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {{ room_name|json_script:"room-name" }}
+    <div class="game-container">
+        <div id="phaser-game"></div> <!-- This is where Phaser will render the game -->
+        <button id="start_button">START</button>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}  <!-- This line keeps inherited scripts and allows adding more -->
+    <script src="{% static 'game.js' %}"></script>
+{% endblock %}

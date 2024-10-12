@@ -21,5 +21,5 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'stellar_rush.settings')
 
 application = ProtocolTypeRouter({
     'http': get_asgi_application(),
-    'websocket': AuthMiddlewareStack(URLRouter(wsg_urlpatterns + wsg_urlpatterns)),
+    'websocket': AuthMiddlewareStack(URLRouter(wsg_urlpatterns)),
 })

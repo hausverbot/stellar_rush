@@ -1,3 +1,14 @@
+let requests = {};
+let statistics = [];
+
+function generateUUIDv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0; // Zufällige Zahl zwischen 0 und 15
+        const v = c === 'x' ? r : (r & 0x3 | 0x8); // Wenn 'x', dann r; wenn 'y', dann (r & 0x3 | 0x8)
+        return v.toString(16); // In Hexadezimal umwandeln
+    });
+}
+
 const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
 const gameSocket = new WebSocket(
@@ -142,12 +153,34 @@ function create() {
             game_star_collected(data);
         } else if(data.topic === "bomb_hit"){
             game_bomb_hit(data);
+        } else if(data.topic === "ack"){
+            game_server_handle_response(data);
         } else{
             console.error("Unknown topic received");
         }
     }
 }
 
+
+function game_server_handle_response(data){
+    //console.log("Req_ID:", data.req_id);
+    if (data.req_id in requests){
+        let start = requests[data.req_id];
+        //console.log("Start Time:", start);
+        let end = Date.now();
+        let time_delta = end-start;
+        statistics.push(time_delta);
+
+        if(statistics.length >= 100){
+            const sum = statistics.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+            const average = sum / statistics.length;
+
+            console.log("Statistics:", statistics.toString(), average);
+            statistics = [];
+            requests = {};
+        }
+    }
+}
 
 
 function game_init(data){
@@ -359,12 +392,19 @@ function hitBomb(player, bomb) {
 
 
 function send_message(topic, payload) {
+    let ruuid = generateUUIDv4();
+    let ts = Date.now();
     gameSocket.send(JSON.stringify({
+        'req_id': ruuid,
         'type': "game_event",
         'topic': topic,
         'player_id': GameData.player_id,
         'payload': payload
     }));
+    if (topic === 'collect_star' || topic === 'hit_bomb' || topic === "movement"){
+        requests[ruuid] = ts;
+        //console.log("Requests:", requests);
+    }
 }
 
 $( document ).ready(function() {

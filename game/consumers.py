@@ -87,6 +87,11 @@ class GameConsumer(AsyncWebsocketConsumer):
             # Handle player movement
             player: Player = self.game.players.get(player_id)
             player.set_position(payload['x'], payload['y'], payload['facing'])
+            await self.send(text_data=json.dumps({
+                'type': 'game_event',
+                'topic': 'ack',
+                'req_id': text_data_json['req_id']
+            }))
             await self.send_to_group('player_movement', {'payload': payload, 'player_id': player_id})
             logging.info(text_data_json)
         elif message_type == 'start_game':

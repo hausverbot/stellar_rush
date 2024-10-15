@@ -5,6 +5,7 @@ import random
 import json
 import uuid
 import logging
+import asyncio
 
 # Initialize a game manager to handle multiple game instances
 game_manager = GameManager()
@@ -31,6 +32,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         # Add a new player to the game
         self.player = self.game.player_joined()
+
+        await asyncio.sleep(2.0)
 
         # Notify the group that a new player has joined
         await self.send_to_group('player_joined', {'player_id': self.player.id})

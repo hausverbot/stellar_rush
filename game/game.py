@@ -168,7 +168,6 @@ class Game:
         # Handle star collection by a player, check if all stars are collected to proceed to next round
         star: Star = self.stars.get(star_id)
         player: Player = self.players.get(player_id)
-        print(f"Player: {player}")
         if star is None or player is None:
             return None
         star.collected = True

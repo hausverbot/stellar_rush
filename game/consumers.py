@@ -9,7 +9,7 @@ import asyncio
 
 # Initialize a game manager to handle multiple game instances
 game_manager = GameManager()
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.ERROR)
 
 
 class GameConsumer(AsyncWebsocketConsumer):
@@ -85,7 +85,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             }))
             logging.info(f"Player id {player_id}, Players: {self.game.get_players()}, "
                          f"Stars: {self.game.get_stars()}, Bombs:{self.game.get_bombs()}.")
-            print("connect")
+
         elif message_type == 'movement':
             # Handle player movement
             player: Player = self.game.players.get(player_id)
@@ -112,7 +112,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         elif message_type == 'collect_star':
             # Handle star collection by a player
             star_id = payload['star_id']
-            print(f"player_id: {player_id}")
+
             is_next_round = self.game.collect_star(star_id, player_id)
 
             if is_next_round:

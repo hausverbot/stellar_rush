@@ -230,7 +230,7 @@ function game_get_star(id){
 
 function game_get_bomb(id){
     let bomb = GameData.bombs[id];
-    console.log(bomb)
+    //console.log(bomb)
     return bomb
 }
 
@@ -262,9 +262,10 @@ function game_destroy_bomb(id){
     }
 }
 
-function game_start(data){
-    $('#start_button').attr('disabled', true);
-    console.log('Game started with stars and bombs:', data.payload.stars, data.payload.bombs);
+function game_start(data) {
+    $('#start_button').prop('disabled', true);  // Use prop instead of attr
+    $('#start_button').addClass('disabled-button'); // Add the CSS class to grey out the button
+    //console.log('Game started with stars and bombs:', data.payload.stars, data.payload.bombs);
     game_spawn_bombs(data.payload.bombs);
     game_spawn_stars(data.payload.stars);
 }
@@ -408,7 +409,7 @@ function send_message(topic, payload) {
 }
 
 $( document ).ready(function() {
-    console.log( "ready!" );
+    //console.log( "ready!" );
     $("#start_button").click(function () {
         send_message("start_game", {})
     })
